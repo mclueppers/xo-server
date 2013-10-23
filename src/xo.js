@@ -5,6 +5,7 @@ var Q = require('q');
 
 var MemoryCollection = require('./collection/memory');
 var RedisCollection = require('./collection/redis');
+var MySQLCollection = require('./collection/mysql');
 var Model = require('./model');
 var Xapi = require('./xapi');
 
@@ -136,7 +137,7 @@ var User = Model.extend({
 });
 
 // @todo handle email uniqueness.
-var Users = RedisCollection.extend({
+var Users = MySQLCollection.extend({
 	'model': User,
 
 	'create': function (email, password, permission) {
@@ -244,9 +245,10 @@ Xo.prototype.start = function (cfg) {
 		'indexes': ['user_id'],
 	});
 	xo.users = new Users({
-		'connection': redis,
-		'prefix': 'xo:user',
-		'indexes': ['email'],
+		//'connection': redis,
+		'prefix'    : 'xo:user',
+		'uri'       : cfg.get('mysql', 'uri'),
+		'indexes'   : ['email'],
 	});
 
 	xo.connections = {};

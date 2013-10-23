@@ -59,3 +59,44 @@ redis:
     #
     # Default: tcp://localhost:6379
     #uri: ''
+
+# configuration of the MySQL server.
+mysql:
+    # Is MySQL enabled?
+    #
+    # Default: false
+    #enabled: false
+
+    # host
+    #
+    # Default: localhost
+    #host: localhost
+
+    # port
+    #
+    # Default: 3306
+    #port: 3306
+
+    # username
+    #
+    # Default: xoauser
+    #username: xoauser
+
+    # password
+    #
+    # Default: xoapass
+    #password: xoapass
+
+    # database
+    #
+    # Default: xoa
+    #database: xoa
+
+    # uri
+    #
+    # Syntax: mysql://username:password@host/db
+    #
+    # If uri is specified the above configuration options are not in use
+    #
+    # Default: mysql://xoauser:xoapass@localhost/xoa
+    #uri: mysql://xoauser:xoapass@localhost/xoa
