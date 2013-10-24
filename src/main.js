@@ -16,7 +16,6 @@ var http_servers = [];
 
 
 // Modified by Martin Dobrev @ 2013-10-22
-var mysql = require('mysql');
 var ldap = require('ldapjs');
 var Knex = require('knex');
 ldap.Attribute.settings.guid_format = ldap.GUID_FORMAT_B;
@@ -475,6 +474,6 @@ xo.on('started', function () {
 
 		console.warn('[Warning] No users, creating “admin@admin.net” with password “admin”');
 
-		//return xo.users.create('admin@admin.net', 'admin', 'admin');
+		return xo.users.create('admin@admin.net', 'admin', 'admin');
 	}).done();
 });

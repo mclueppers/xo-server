@@ -68,7 +68,6 @@ Redis.prototype._extract = function (ids) {
 			{
 				return null;
 			}
-
 			// Mix the identifier in.
 			model.id = id;
 			return model;
@@ -91,6 +90,8 @@ Redis.prototype._add = function (models, options) {
 	var indexes = this.indexes;
 
 	var promises = [];
+
+	console.log(models);
 
 	_.each(models, function (model) {
 		var promise;
@@ -194,7 +195,7 @@ Redis.prototype._get = function (properties) {
 
 			ids = [id];
 		}
-
+		console.log(ids);
 		return self._extract(ids);
 	});
 };

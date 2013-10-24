@@ -136,7 +136,6 @@ Api.err = {
 Api.prototype.checkPermission = function (session, permission)
 {
 	// @todo Handle token permission.
-
 	var user_id = session.get('user_id');
 
 	if (undefined === user_id)
@@ -151,6 +150,9 @@ Api.prototype.checkPermission = function (session, permission)
 	}
 
 	return this.xo.users.first(user_id).then(function (user) {
+		if (!user) {
+			console.log("Api.checkPermission: XO.users.first returned empty result. user_id: %s", user_id);
+		} else 
 		if (!user.hasPermission(permission))
 		{
 			throw Api.err.UNAUTHORIZED;

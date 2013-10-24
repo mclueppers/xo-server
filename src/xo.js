@@ -245,7 +245,7 @@ Xo.prototype.start = function (cfg) {
 		'indexes': ['user_id'],
 	});
 	xo.users = new Users({
-		//'connection': redis,
+		'connection': redis,
 		'prefix'    : 'xo:user',
 		'uri'       : cfg.get('mysql', 'uri'),
 		'indexes'   : ['email'],

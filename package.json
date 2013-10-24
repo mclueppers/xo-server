@@ -4,6 +4,12 @@
     "email": "julien.fontanet@vates.fr",
     "url": "http://vates.fr/"
   },
+  "contributors": [
+    {
+      "name": "Martin Dobrev",
+      "email": "martin.dobrev@unixsol.co.uk"
+    }
+  ],
   "name": "xo-server",
   "version": "0.1.0",
   "homepage": "http://github.com/vatesfr/xo-server/",
@@ -23,7 +29,12 @@
     "underscore": ">=1.5.2",
     "validator": ">=1.2.1",
     "ws": ">=0.4.27",
-    "xmlrpc": ">=1.1.0"
+    "xmlrpc": ">=1.1.0",
+    "knex": ">=0.4.11",
+    "mysql": ">=2.0.0-alpha9",
+    "bignumber": ">=1.1.0",
+    "ldapjs": ">=0.6.3",
+    "require-all": ">=0.0.3"
   },
   "devDependencies": {},
   "optionalDependencies": {},
