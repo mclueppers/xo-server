@@ -369,7 +369,7 @@ cfg.merge({
 		'binddn'   : 'dc=example,dc=com',
 	},
 	'userdb': {
-		'type'     : 'mysql' // Accepted values 'redis', 'mysql' and 'ldap'. More to come later on
+		'type'     : 'redis' // Accepted values 'redis', 'mysql' and 'ldap'. More to come later on
 	},
 	// End of mod by Martin Dobrev
 });
@@ -422,6 +422,11 @@ read_file(__dirname +'/../config/local.yaml').then(
 		var username = cfg.get('mysql', 'username').toString();
 		var password = cfg.get('mysql', 'password').toString();
 		
+		// Initialize Knex
+		//
+		// /!\ Initialize it only once
+		//
+		// on later stage use knex = require('knex').knex for DB queries
 		Knex.knex = Knex.initialize(
 		{
 			client: 'mysql',

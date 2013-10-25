@@ -100,3 +100,14 @@ mysql:
     #
     # Default: mysql://xoauser:xoapass@localhost/xoa
     #uri: mysql://xoauser:xoapass@localhost/xoa
+
+# Configuration of the userdb
+userdb:
+    # Type of the backend?
+    #
+    # Syntax: mysql, redis, postgres, ldap
+    #
+    # /!\ Currently supported backends: redis, mysql
+    #
+    # Default: redis
+    #type: redis

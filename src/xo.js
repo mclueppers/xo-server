@@ -5,7 +5,6 @@ var Q = require('q');
 
 var MemoryCollection = require('./collection/memory');
 var RedisCollection = require('./collection/redis');
-var MySQLCollection = require('./collection/mysql');
 var Model = require('./model');
 var Xapi = require('./xapi');
 
@@ -136,8 +135,12 @@ var User = Model.extend({
 	},
 });
 
+/* Mod by Martin Dobrev
+This snippet is obsolete now
+Take a look at the InitializeUsersBackend function
+
 // @todo handle email uniqueness.
-var Users = MySQLCollection.extend({
+var Users = RedisCollection.extend({
 	'model': User,
 
 	'create': function (email, password, permission) {
@@ -155,6 +158,47 @@ var Users = MySQLCollection.extend({
 		});
 	}
 });
+*/
+
+function InitializeUsersBackend(backend)
+{
+	var collection = null;
+
+	switch (backend) 
+	{
+		case 'redis' : collection = require('./collection/redis'); break;
+		case 'mysql' : collection = require('./collection/mysql'); break;
+		case 'postgre' : break;
+		case 'sqlite' : break;
+		case 'ldap' : break;
+		default : throw "Userdb backend not supported: " + backend; break;
+	}
+
+	if (collection !== null) {
+		console.info('UserDB initialized with %s backend', backend);
+
+		return collection.extend({
+			'model': User,
+
+			'create': function (email, password, permission) {
+				var user = new User({
+					'email': email,
+				});
+				if (permission)
+				{
+					user.set('permission', permission);
+				}
+
+				var self = this;
+				return  user.setPassword(password).then(function () {
+					return self.add(user);
+				});
+			}
+		});
+	} else {
+		throw "Unable to initialize UserDB Collection";
+	}
+}
 
 //--------------------------------------------------------------------
 
@@ -230,6 +274,10 @@ Xo.prototype.computeStats = _.throttle(function () {
 Xo.prototype.start = function (cfg) {
 	var xo = this;
 	var redis = require('then-redis').createClient(cfg.get('redis', 'uri'));
+	
+	// Modified by Martin Dobrev @ 2013-10-25
+	var userdb = InitializeUsersBackend(cfg.get('userdb', 'type'));
+	// End of mod
 
 	//--------------------------------------
 	// Persistent collections.
@@ -244,10 +292,10 @@ Xo.prototype.start = function (cfg) {
 		'prefix': 'xo:token',
 		'indexes': ['user_id'],
 	});
-	xo.users = new Users({
+	// Mod by Martin Dobrev - Replaced Users with the result of the UserDB initializer
+	xo.users = new userdb({
 		'connection': redis,
 		'prefix'    : 'xo:user',
-		'uri'       : cfg.get('mysql', 'uri'),
 		'indexes'   : ['email'],
 	});
 

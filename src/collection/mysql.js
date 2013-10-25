@@ -29,18 +29,12 @@ function MySQL(options, models)
 		options = {};
 	}
 
-	if (!options.uri)
-	{
-		throw 'MySQL missing option: uri';
-	}
-
 	_.defaults(options, {
 		'indexes': [],
 	});
 
 	MySQL.super_.call(this, models);
 
-	this.uri = options.uri;
 	this.indexes = options.indexes;
 	this.prefix = options.prefix;
 }
@@ -159,8 +153,6 @@ MySQL.prototype._add = function (models, options)
 		};
 
 	_.each(models, function (model) {
-		var promise;
-
 		// Extend the schema adding missing values
 		var tday = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''); // @todo: use of nodejs library maybe?!
 
@@ -175,11 +167,11 @@ MySQL.prototype._add = function (models, options)
 			activationtoken: null
 		};
 
-		console.log(data);
-
 		if (!replace) {
 			promises.push(knex('users').insert(data));
 		} else {
+			delete data.created;
+			//data.lastmodified(tday);
 			promises.push(knex('users').where('email', model.email).update(data));
 		}
 	});
@@ -200,20 +192,16 @@ MySQL.prototype._remove = function (ids)
 		keys.push(ids[i]);
 	}
 
-	console.log(keys);
-	console.log(ids);
-
 	// @todo Handle indexes.
-	//promises.push(knex('users').whereIn('email', keys).del());
-
-	promises.push(true);
+	promises.push(knex('users').whereIn('email', keys).del());
 
 	return Q.all(promises);
 };
 
 MySQL.prototype._update = function (models)
 {
-	console.info('Not yet implemented: _update');
+	// _add already handles variable sanitation
+	return this._add(models, {replace: true});
 };
 
 
