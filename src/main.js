@@ -1,3 +1,12 @@
+// Enables strict mode for this whole file.
+'use strict';
+
+// node.js does not give complete stacktrace with async code,
+// superstack is here for that!
+require('superstack');
+
+//-------------------------------------
+
 var _ = require('underscore');
 var connect = require('connect');
 var fs = require('fs');
@@ -168,11 +177,13 @@ xo.on('started', function () {
 // 	}
 
 // 	http_servers.forEach(function (http_server) {
-// 		new WSServer({
-// 			'server': http_server,
-// 			'path': '/websockify',
-// 		})
-// 		.on('connection', on_connection);
+// 		http_server.on('listening', function () {
+// 			new WSServer({
+// 				'server': http_server,
+// 				'path': '/websockify',
+// 			})
+// 			.on('connection', on_connection);
+// 		});
 // 	});
 // });
 
@@ -205,10 +216,12 @@ xo.on('started', function () {
 	}
 
 	http_servers.forEach(function (http_server) {
-		new WSServer({
-			'server': http_server,
-			'path': '/api/',
-		}).on('connection', on_connection);
+		http_server.on('listening', function () {
+			new WSServer({
+				'server': http_server,
+				'path': '/api/',
+			}).on('connection', on_connection);
+		});
 	});
 });
 
@@ -405,7 +418,13 @@ read_file(__dirname +'/../config/local.yaml').then(
 			require('http').createServer().listen(port, host)
 				.on('listening', function () {
 					console.info(
-						'XO-Server HTTP server is listening on %s:%s',
+						'HTTP server is listening on %s:%s',
+						host, port
+					);
+				})
+				.on('error', function () {
+					console.warn(
+						'[Warn] HTTP server could not listen on %s:%s',
 						host, port
 					);
 				})
@@ -457,7 +476,12 @@ read_file(__dirname +'/../config/local.yaml').then(
 					'key': key,
 				}).listen(port, host).on('listening', function () {
 					console.info(
-						'XO-Server HTTPS server is listening on %s:%s',
+						'HTTPS server is listening on %s:%s',
+						host, port
+					);
+				}).on('error', function () {
+					console.warn(
+						'[Warn] HTTPS server could not listen on %s:%s',
 						host, port
 					);
 				})
