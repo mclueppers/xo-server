@@ -356,7 +356,6 @@ cfg.merge({
 	// Modified by Martin Dobrev @ 2013-10-22
 	'mysql': {
 		'enabled'  : false,
-		'uri'      : 'mysql://xoauser:xoapass@localhost:3306/xoa',
 		'username' : 'xoauser',
 		'password' : 'xoapass',
 		'database' : 'xoa',

@@ -277,7 +277,7 @@ Api.fn.user = {
 			throw Api.err.INVALID_PARAMS;
 		}
 
-		var users =  this.xo.users;
+		var users = this.xo.users;
 		return this.checkPermission(session, 'admin').then(function () {
 			return users.remove(p_id);
 		}).then(function (success) {

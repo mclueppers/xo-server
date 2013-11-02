@@ -170,12 +170,12 @@ function InitializeUsersBackend(backend)
 		case 'mysql' : collection = require('./collection/mysql'); break;
 		case 'postgre' : break;
 		case 'sqlite' : break;
-		case 'ldap' : break;
+		case 'ldap' : collection = require('./collection/ldap'); break;
 		default : throw "Userdb backend not supported: " + backend; break;
 	}
 
 	if (collection !== null) {
-		console.info('UserDB initialized with %s backend', backend);
+		console.info('UserDB initialized with "%s" backend', backend);
 
 		return collection.extend({
 			'model': User,
@@ -196,7 +196,7 @@ function InitializeUsersBackend(backend)
 			}
 		});
 	} else {
-		throw "Unable to initialize UserDB Collection";
+		throw "Unable to initialize UserDB Collection. Using not yet implemented backend: " + backend;
 	}
 }
 

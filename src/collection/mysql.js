@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  @autor: Martin Dobrev <martin.dobrev@unixsol.co.uk>
+ *  @author: Martin Dobrev <martin.dobrev@unixsol.co.uk>
 **/
 
 var _ = require('underscore');
@@ -56,7 +56,7 @@ MySQL.prototype._extract = function (ids)
 	var promises = [];
 
 	_.each(ids, function (id) {
-		promises.push(knex('users').where('email', id).andWhere('active', 1).select('password', 'email', 'permissions').then(function (model)
+		promises.push(knex('users').where('email', id).andWhere('active', 1).select('id', 'password', 'email', 'permissions').then(function (model)
 		{
 			if (_.isEmpty(model))
 			{
@@ -66,6 +66,7 @@ MySQL.prototype._extract = function (ids)
 			var result = 
 			{
 				id: id,
+				db_id: model[0].id,
 				email: model[0].email,
 				pw_hash: model[0].password,
 				permission: perms[model[0].permissions],
@@ -193,7 +194,10 @@ MySQL.prototype._remove = function (ids)
 	}
 
 	// @todo Handle indexes.
-	promises.push(knex('users').whereIn('email', keys).del());
+	promises.push(knex('users').whereIn('email', keys).del().then(function (ids)
+	{
+		return true;
+	}));
 
 	return Q.all(promises);
 };
